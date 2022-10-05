@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>robot_script</name>
+  <version>0.1.0</version>
+  <description>Real time script to be run on the physical ODRI robot</description>
+  <maintainer email="fuchioka@cs.ubc.ca">yunifuchioka</maintainer>
+  <license>BSD 3-Clause License</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>mpi_cmake_modules</buildtool_depend>
+  
+  <depend>eigen</depend>
+  <depend>real_time_tools</depend>
+  <depend>odri_control_interface</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
