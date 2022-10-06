@@ -137,7 +137,7 @@ sudo -s
 source /opt/ros/dashing/setup.bash
 source /opt/openrobots/setup.bash
 ```
-3. `cd` to the workspace directory (`cd ~/Documents/robot_script_ws/workspace` in my case), then build with colcon. I belive that the arguments to specify the libtorch installation location only needs to be run once on initial project compilation (ie just `colcon build`). If the build fails, it's most likely because of changes to cmake files in external packages that haven't been accounted for. In this case, I look for the chunk of cmake code corresponding to the error message, and comment out the problematic lines.
+3. `cd` to the workspace directory (`cd ~/Documents/robot_script_ws/workspace` in my case), then build with colcon. I belive that the arguments to specify the libtorch installation location only needs to be run once on initial project compilation (ie just `colcon build` for later builds). If the build fails, it's most likely because of changes to cmake files in external packages that haven't been accounted for. In this case, I look for the chunk of cmake code corresponding to the error message, and comment out the problematic lines (a bit hacky, but it's likely not worth debugging cmake code accross multiple packages...).
 ```
 colcon build --cmake-args -DCMAKE_PREFIX_PATH=$PWD/../libtorch
 ```
@@ -159,24 +159,24 @@ robot_script_ws/
 	workspace/
 ```
 2. From a non-sudo user, run
-```
-python src/opt-mimic-robot-deploy/srcpy/convert_torchscript_model.py my_trained_model
-```
-I recommend doing this within a python virtual environment with pytorch installed. Also note that the string argument is the name of the model file, without the `.pt` file extension.
+	```
+	python src/opt-mimic-robot-deploy/srcpy/convert_torchscript_model.py my_trained_model
+	```
+	I recommend doing this within a python virtual environment with pytorch installed. Also note that the string argument is the name of the model file, without the `.pt` file extension.
 
-Afterwards, my directory looks like
-```
-robot_script_ws/
-	config/
-	libtorch/
-	models/
-		my_trained_model.pt
-		my_trained_model_script.pt
-	traj/
-	treep_machines_in_motion/
-	workspace/
-```
-where `my_trained_model_script.pt` is the equivalent model, converted to a torchscript model so it can be loaded from C++
+	Afterwards, my directory looks like
+	```
+	robot_script_ws/
+		config/
+		libtorch/
+		models/
+			my_trained_model.pt
+			my_trained_model_script.pt
+		traj/
+		treep_machines_in_motion/
+		workspace/
+	```
+	where `my_trained_model_script.pt` is the equivalent model, converted to a torchscript model so it can be loaded from C++
 3. Then the RL policy to be used is specified in `main.cpp` with the command `controller.initialize_network("my_trained_model");`.
 
 ### Import Reference Trajectory Files
@@ -190,10 +190,9 @@ Since the trained RL policy is trained to output residual position targets, the 
 ros2 run robot_script calibrate MY_INTERFACE
 ```
 where `MY_INTERFACE` if the name of the interface, obtained from running `ifconfig`.
-2. TODO
 ### Run Main Script
 1. Run the script
 ```
 ros2 run robot_script main MY_INTERFACE
 ```
-where `MY_INTERFACE` if the name of the interface, obtained from running `ifconfig`.
+where `MY_INTERFACE` if the name of the interface, obtained from running `ifconfig`. Within `main.cpp`, the lines `ref_traj = openData("../traj/my_ref_traj.csv");` and `controller.initialize_network("my_trained_model");` must have arguments corresponding to the reference trajectory file and neural network file being used.
