@@ -126,8 +126,8 @@ robot_script_ws/
 			real_time_tools/
 			yaml_utils
 ```
-### Convert torch model to torchscript moel
-In order for a pytorch neural network model to be readable from a C++ program, it must first be converted to a torchscript model. See the [Pytorch tutorial on loading a torchscript model in C++](https://pytorch.org/tutorials/advanced/cpp_export.html) for more details. Here are the steps to perform this conversion:
+### Import Neural Network Policies
+In order for a pytorch neural network model produced by [RL training](https://github.com/yunifuchioka/opt-mimic-raisim) to be readable from a C++ program, it must first be converted to a torchscript model. See the [Pytorch tutorial on loading a torchscript model in C++](https://pytorch.org/tutorials/advanced/cpp_export.html) for more details. Here are the steps to perform this conversion:
 1. Copy the trained model file, say `my_trained_model.pt` for example, into the `models` folder. The directory should look like
 ```
 robot_script_ws/
@@ -160,8 +160,17 @@ robot_script_ws/
 	workspace/
 ```
 where `my_trained_model_script.pt` is the equivalent model, converted to a torchscript model so it can be loaded from C++
+3. Then the RL policy to be used is specified in `main.cpp` with the command `controller.initialize_network("my_trained_model");`.
 
-### Run main script
+### Import Reference Trajectory Files
+Since the trained RL policy is trained to output residual position targets, the reference motion trajectory file must also be used to execute the motion on the robot.
+1. Copy the reference csv file produced from [trajectory optimization](https://github.com/yunifuchioka/opt-mimic-traj-opt) onto the `traj` folder.
+2. Then the reference motion to be used is specified in `main.cpp` with the command `ref_traj = openData("../traj/my_ref_traj.csv");`.
+
+### Calibrate Joint Angles
+- Follow the same instructions as "Run Main Script", except on step 5 run `ros2 run robot_script calibrate MY_INTERFACE`
+- TODO
+### Run Main Script
 1. Switch to root, which is necessary for the network communcation
 ```
 sudo -s
