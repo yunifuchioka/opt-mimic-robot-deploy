@@ -34,78 +34,11 @@ static THREAD_FUNCTION_RETURN_TYPE control_loop(void* thread_data_void_ptr) {
   double t = 0.0;
 
   Eigen::MatrixXd ref_traj;
-  // ref_traj = openData("../traj/08-03-stand.csv");
-  // ref_traj = openData("../traj/08-03-squat.csv");
-  // ref_traj = openData("../traj/08-19-trot.csv");
-  // ref_traj = openData("../traj/08-19-front-hop.csv");
-  // ref_traj = openData("../traj/08-19-180-backflip.csv");
-  // ref_traj = openData("../traj/08-29-jump.csv");
-  // ref_traj = openData("../traj/08-24-biped-step.csv");
-  // ref_traj = openData("../traj/08-31-jump.csv");
-  // ref_traj = openData("../traj/09-01-jump.csv");
-  ref_traj = openData("../traj/09-08-biped-step.csv");
+  ref_traj = openData("../traj/08-19-trot.csv");
 
   NetworkController controller(robot);
   controller.set_traj(ref_traj);
-  // controller.initialize_network("08-26-trot");
-  // controller.initialize_network("08-31-front-hop");
-  // controller.initialize_network("08-30-jump-1");
-  // controller.initialize_network("08-31-biped-zhaoming");
-  // controller.initialize_network("08-31-jump");
-  // controller.initialize_network("09-01-front-hop");
-  // below are history conditioned policies
-  // controller.initialize_network("09-02-trot");
-  // controller.initialize_network("09-01-front-hop-2");
-  // controller.initialize_network("09-01-jump");
-  // controller.initialize_network("09-01-biped-step");
-  // controller.initialize_network("09-03-trot-torque-position");
-  // controller.initialize_network("09-02-front-hop");
-  // controller.initialize_network("09-03-front-hop-torque-noise-2");
-  // controller.initialize_network("09-04-front-hop-offset-only");
-  // controller.initialize_network("09-03-front-hop-offset");
-  // controller.initialize_network("09-04-front-hop-imu-drift-2");
-  // controller.initialize_network("09-06-trot");
-  // controller.initialize_network("09-05-front-hop");
-  // controller.initialize_network("09-05-zhaoming_biped");
-  // below are non-history conditioned policies
-  // controller.initialize_network("09-07-trot-no-hist-less-action-torque");
-  // controller.initialize_network("09-06-no-hist-less-action-torque");
-  // controller.initialize_network("09-06-biped-step-no-history");
-  // controller.initialize_network("09-07-front-hop-no-hist-less-action-torque");
-  // controller.initialize_network("09-07-zhaoming_biped_iter69000");
-  // controller.initialize_network("09-07-biped-step-impedance-kd05");
-  // controller.initialize_network("09-07-biped-step-impedance-more-action-torque");
-  // controller.initialize_network("09-08-front-hop-impedance-iter10000");
-  // controller.initialize_network("09-08-front-hop-impedance");
-  // controller.initialize_network("09-08-front-hop-impedance-torque");
-  // controller.initialize_network("09-10-trot-pos-torque");
-  // controller.initialize_network("09-08-biped-step-feedforward");
-  // controller.initialize_network("09-09-180-backflip-pos-torque");
-
-  // controller.initialize_network("09-10-front-hop-pos-iter65500");
-  // controller.initialize_network("09-10-front-hop-pos-torque-iter65500");
-  // controller.initialize_network("09-10-front-hop-pos-vel-torque-iter65500");
-
-  // controller.initialize_network("09-12-180-backflip-seed2-iter66000");
-  // controller.initialize_network("09-12-180-backflip-pos-torque-seed3-iter66000");
-  // controller.initialize_network("09-12-180-backflip-pos-vel-torque-seed2-iter66000");
-
-  // controller.initialize_network("09-10-biped-step-seed3-iter93500");
-  // controller.initialize_network("09-10-biped-step-pos-torque-iter93500");
-  // controller.initialize_network("09-10-biped-step-pos-vel-torque-iter93500");
-
-  // controller.initialize_network("final-trot-p");
-  // controller.initialize_network("final-trot-pt");
-  // controller.initialize_network("final-trot-pvt");
-  // controller.initialize_network("final-front-hop-pt");
-  // controller.initialize_network("final-front-hop-pt-iter60k");
-  // controller.initialize_network("final-front-hop-pt-iter70k");
-  // controller.initialize_network("final-180-backflip-pt");
-  // controller.initialize_network("final-biped-step-pt-iter40k");
-  controller.initialize_network("final-biped-step-pt-iter50k");
-  // controller.initialize_network("final-biped-step-pt-iter60k");
-  // controller.initialize_network("final-biped-step-pt-iter70k");
-  // controller.initialize_network("final-biped-step-pt");
+  controller.initialize_network("final-trot-pt");
 
   // buffer for storing joint velocity values for filtering
   // length of 20 corresponds to RL policy frequency

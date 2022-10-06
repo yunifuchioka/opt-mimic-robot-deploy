@@ -1,4 +1,4 @@
-# robot_script
+# opt-mimic-robot-deploy
 Robot deployment code for the paper "OPT-Mimic: Imitation of Optimized Trajectories for Dynamic Quadruped Behaviors".
 
 ## Setup Instructions
@@ -126,6 +126,25 @@ robot_script_ws/
 			real_time_tools/
 			yaml_utils
 ```
+### Build and Source the Project
+These steps have to be run for every new terminal, and steps 3 and 4 have to be run after any modifications to C++ code.
+1. Switch to root, which is necessary for the network communcation
+```
+sudo -s
+```
+2. Source ROS2. In my case
+```
+source /opt/ros/dashing/setup.bash
+source /opt/openrobots/setup.bash
+```
+3. `cd` to the workspace directory (`cd ~/Documents/robot_script_ws/workspace` in my case), then build with colcon. I belive that the arguments to specify the libtorch installation location only needs to be run once on initial project compilation (ie just `colcon build`). If the build fails, it's most likely because of changes to cmake files in external packages that haven't been accounted for. In this case, I look for the chunk of cmake code corresponding to the error message, and comment out the problematic lines.
+```
+colcon build --cmake-args -DCMAKE_PREFIX_PATH=$PWD/../libtorch
+```
+4. Source the setup file
+```
+source install/setup.bash
+```
 ### Import Neural Network Policies
 In order for a pytorch neural network model produced by [RL training](https://github.com/yunifuchioka/opt-mimic-raisim) to be readable from a C++ program, it must first be converted to a torchscript model. See the [Pytorch tutorial on loading a torchscript model in C++](https://pytorch.org/tutorials/advanced/cpp_export.html) for more details. Here are the steps to perform this conversion:
 1. Copy the trained model file, say `my_trained_model.pt` for example, into the `models` folder. The directory should look like
@@ -141,11 +160,9 @@ robot_script_ws/
 ```
 2. From a non-sudo user, run
 ```
-python src/robot_script/srcpy/convert_torchscript_model.py "my_trained_model"
+python src/opt-mimic-robot-deploy/srcpy/convert_torchscript_model.py my_trained_model
 ```
-Notes:
-- I recommend doing this within a python virtual environment with pytorch installed
-- The string argument is the name of the model file, without the `.pt` file extension
+I recommend doing this within a python virtual environment with pytorch installed. Also note that the string argument is the name of the model file, without the `.pt` file extension.
 
 Afterwards, my directory looks like
 ```
@@ -168,27 +185,14 @@ Since the trained RL policy is trained to output residual position targets, the 
 2. Then the reference motion to be used is specified in `main.cpp` with the command `ref_traj = openData("../traj/my_ref_traj.csv");`.
 
 ### Calibrate Joint Angles
-- Follow the same instructions as "Run Main Script", except on step 5 run `ros2 run robot_script calibrate MY_INTERFACE`
-- TODO
+1. Run
+```
+ros2 run robot_script calibrate MY_INTERFACE
+```
+where `MY_INTERFACE` if the name of the interface, obtained from running `ifconfig`.
+2. TODO
 ### Run Main Script
-1. Switch to root, which is necessary for the network communcation
-```
-sudo -s
-```
-2. Source ROS2 if this isn't done automatically in the `.bashrc`. In my case
-```
-source /opt/ros/dashing/setup.bash
-source /opt/openrobots/setup.bash
-```
-3. `cd` to the workspace directory (`cd ~/Documents/robot_script_ws/workspace` in my case), then build with colcon
-```
-colcon build
-```
-4. Source the setup file
-```
-source install/setup.bash
-```
-5. Run the script
+1. Run the script
 ```
 ros2 run robot_script main MY_INTERFACE
 ```
