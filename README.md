@@ -1,5 +1,5 @@
 # opt-mimic-robot-deploy
-Robot deployment code for the paper "OPT-Mimic: Imitation of Optimized Trajectories for Dynamic Quadruped Behaviors".
+Robot deployment code for the paper "OPT-Mimic: Imitation of Optimized Trajectories for Dynamic Quadruped Behaviors". This repo was based on the [ODRI Solo repo](https://github.com/open-dynamic-robot-initiative/solo), rewritten to exclude unused features (eg. integration with `dynamic_graph_manager` and TI hardware), and to support custom functionality (eg. control through neural networks).
 
 ## Setup Instructions
 Note: these instructions are not maintained for compatibility with newer versions of external software (eg. NYU/MPI packages).
